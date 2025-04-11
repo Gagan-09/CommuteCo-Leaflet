@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CommuteCo</title>
+
+  <!-- Leaflet Core -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <!-- Leaflet Routing Machine -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: #1e88e5;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .input-group {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+h3 {
+  margin: 10px 0 5px;
+  color: #333;
+}
+
+
+
+    input[type="number"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #43a047;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #555;
+    }
+    .route-logo {
+  height: 50px;
+  width: auto;
+}
+
+
+    #map {
+      height: 600px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CommuteCo</h1>
+    <img src="https://media-hosting.imagekit.io/ec5c2d35d1e640e8/logo.png?Expires=1839018053&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=F1mDXmZbHD8NrL00tDuenHN5FwVEqW~OF1Thlz6FdtxIjqYB10RA~-hYEIhSz2Z9NVDiMwUogJ0-PAKINZTAaw~zHR1CYA~qOkHCBCLCTKPn3f6GOEwoZhuj8yaj3-tJzK~OjjcTMx04xDFBDruEVU-8nxc6x9QXxWZw0M8HDAw6nN0E5vG8lc1qA88vao4TgAjDgIozXkWn82yXZ01sWuq4Zy9ZVcGPHSpOTQCqnaGTqsyd2Amf5IXY6DU-J~ub5P4Vw5L0ilhpgSI2U-emgii~Tbv4QTpyslfPxpmLWATUBLh7y3Ma51WjaoSu2DnXX5u0gcTZm8WwyVMmoYiN5A" 
+       alt="Logo" class="route-logo" />
+    <p>Click on the map or enter coordinates to set source and destination</p>
+  </header>
+
+  <div class="container">
+    <div class="input-group">
+      <input type="text" id="src-place" placeholder="Source Locality (e.g. MG Road, Bangalore)">
+      <input type="text" id="dest-place" placeholder="Destination Locality (e.g. Indiranagar)">
+      <button id="search-places">Search Places</button>
+    </div>
+    
+    <h3>📍 Source Location</h3>
+    <div class="input-group">
+      <input type="number" id="src-lat" placeholder="Source Latitude" step="any" />
+      <input type="number" id="src-lng" placeholder="Source Longitude" step="any" />
+    </div>
+
+    <h3>🎯 Destination Location</h3>
+    <div class="input-group">
+      <input type="number" id="dest-lat" placeholder="Destination Latitude" step="any" />
+      <input type="number" id="dest-lng" placeholder="Destination Longitude" step="any" />
+    </div>
+
+    <div class="buttons">
+      <button id="set-coords">Set Route</button>
+      <button id="clear">Clear</button>
+    </div>
+
+    <div class="info">
+      🖱 Click on the map to set a point. Press <strong>S</strong> to select source, <strong>D</strong> for destination,<strong>F</strong> To show route, <strong>T</strong> for live location, <strong>X</strong> to stop live location tracking, <strong>C</strong> to clear route.
+    </div>
+
+    <div id="map"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
+
+
+<!-- https://media-hosting.imagekit.io/ec5c2d35d1e640e8/logo.png?Expires=1839018053&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=F1mDXmZbHD8NrL00tDuenHN5FwVEqW~OF1Thlz6FdtxIjqYB10RA~-hYEIhSz2Z9NVDiMwUogJ0-PAKINZTAaw~zHR1CYA~qOkHCBCLCTKPn3f6GOEwoZhuj8yaj3-tJzK~OjjcTMx04xDFBDruEVU-8nxc6x9QXxWZw0M8HDAw6nN0E5vG8lc1qA88vao4TgAjDgIozXkWn82yXZ01sWuq4Zy9ZVcGPHSpOTQCqnaGTqsyd2Amf5IXY6DU-J~ub5P4Vw5L0ilhpgSI2U-emgii~Tbv4QTpyslfPxpmLWATUBLh7y3Ma51WjaoSu2DnXX5u0gcTZm8WwyVMmoYiN5A__ -->
+
+
+
+<!-- good. Now can u find a way where source and destination can be marked using the locality name -->
