@@ -1,148 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CommuteCo</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CommuteCo</title>
 
-  <!-- Leaflet Core -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Leaflet Core -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-  <!-- Leaflet Routing Machine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+    <!-- Leaflet Routing Machine -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+    />
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-    }
+    <!-- Lottie -->
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.9.6/build/player/lottie.min.js"></script>
 
-    header {
-      background-color: #1e88e5;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+      header {
+        background-color: #1e88e5;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
 
-    .input-group {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-h3 {
-  margin: 10px 0 5px;
-  color: #333;
-}
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
 
+      .input-group {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
 
+      .input-group input[type="text"] {
+        flex: 1;
+        min-width: 250px;
+        height: 40px;
+      }
 
-    input[type="number"] {
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
+      @media (max-width: 600px) {
+        @media (max-width: 600px) {
+          .input-group {
+            flex-direction: column;
+          }
 
-    .buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
+          .input-group input[type="text"] {
+            width: 100%;
+          }
 
-    button {
-      padding: 10px 20px;
-      background-color: #43a047;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
+          .action-buttons {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+          }
 
-    button:hover {
-      background-color: #388e3c;
-    }
+          .action-buttons button {
+            width: 60%;
+            max-width: 300px;
+            margin-top: 20px;
+          }
+        }
+      }
 
-    .info {
-      font-size: 14px;
-      color: #555;
-    }
-    .route-logo {
-  height: 50px;
-  width: auto;
-}
+      h3 {
+        margin: 10px 0 5px;
+        color: #333;
+      }
 
+      input[type="number"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+      }
 
-    #map {
-      height: 600px;
-      width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>CommuteCo</h1>
-    <img src="https://media-hosting.imagekit.io/ec5c2d35d1e640e8/logo.png?Expires=1839018053&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=F1mDXmZbHD8NrL00tDuenHN5FwVEqW~OF1Thlz6FdtxIjqYB10RA~-hYEIhSz2Z9NVDiMwUogJ0-PAKINZTAaw~zHR1CYA~qOkHCBCLCTKPn3f6GOEwoZhuj8yaj3-tJzK~OjjcTMx04xDFBDruEVU-8nxc6x9QXxWZw0M8HDAw6nN0E5vG8lc1qA88vao4TgAjDgIozXkWn82yXZ01sWuq4Zy9ZVcGPHSpOTQCqnaGTqsyd2Amf5IXY6DU-J~ub5P4Vw5L0ilhpgSI2U-emgii~Tbv4QTpyslfPxpmLWATUBLh7y3Ma51WjaoSu2DnXX5u0gcTZm8WwyVMmoYiN5A" 
-       alt="Logo" class="route-logo" />
-    <p>Click on the map or enter coordinates to set source and destination</p>
-  </header>
+      .buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
 
-  <div class="container">
-    <div class="input-group">
-      <input type="text" id="src-place" placeholder="Source Locality (e.g. MG Road, Bangalore)">
-      <input type="text" id="dest-place" placeholder="Destination Locality (e.g. Indiranagar)">
-      <button id="search-places">Search Places</button>
+      .action-buttons button {
+        padding: 12px 24px;
+        background: linear-gradient(to right, #1976d2, #1565c0);
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
+      }
+
+      .action-buttons button:hover {
+        background: linear-gradient(to right, #1565c0, #0d47a1);
+        transform: translateY(-1.5px);
+      }
+      @media (max-width: 600px) {
+        .action-buttons {
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+
+        .action-buttons button {
+          width: 60%;
+          max-width: 300px;
+          margin: 5px 0;
+        }
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #43a047;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background: linear-gradient(to right, #1565c0, #0d47a1);
+      }
+      #search-places {
+        margin-top: 20px;
+      }
+      @media screen and (max-width: 600px) {
+        #search-places {
+          width: 100%;
+          max-width: 300px;
+          margin-top: 10px;
+        }
+      }
+      .info {
+        font-size: 14px;
+        color: #555;
+      }
+
+      .route-logo {
+        height: 50px;
+        width: auto;
+      }
+      #back-to-passenger-btn {
+        display: block;
+        width: 50%;
+        margin: 20px auto;
+        margin-bottom: 20px;
+        padding: 14px 28px;
+        background: linear-gradient(to right, #1976d2, #1565c0);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      #back-to-passenger-btn:hover {
+        background: linear-gradient(to right, #1565c0, #0d47a1);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(56, 142, 60, 0.4);
+      }
+
+      #map {
+        height: 600px;
+        width: 80%;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+      #book-ride-btn {
+        display: block;
+        margin: 20px auto;
+        margin-bottom: 0;
+        padding: 14px 28px;
+        background: linear-gradient(to right, #1976d2, #1565c0);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      #book-ride-btn:hover {
+        background: linear-gradient(to right, #1565c0, #0d47a1);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(56, 142, 60, 0.4);
+      }
+
+      #lottie-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(4px);
+      }
+
+      #ride-summary {
+        display: block;
+        margin: 20px 0;
+        padding: 15px;
+        background: #e3f2fd;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>CommuteCo</h1>
+      <img
+        src="https://media-hosting.imagekit.io/ec5c2d35d1e640e8/logo.png?Expires=1839018053&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=F1mDXmZbHD8NrL00tDuenHN5FwVEqW~OF1Thlz6FdtxIjqYB10RA~-hYEIhSz2Z9NVDiMwUogJ0-PAKINZTAaw~zHR1CYA~qOkHCBCLCTKPn3f6GOEwoZhuj8yaj3-tJzK~OjjcTMx04xDFBDruEVU-8nxc6x9QXxWZw0M8HDAw6nN0E5vG8lc1qA88vao4TgAjDgIozXkWn82yXZ01sWuq4Zy9ZVcGPHSpOTQCqnaGTqsyd2Amf5IXY6DU-J~ub5P4Vw5L0ilhpgSI2U-emgii~Tbv4QTpyslfPxpmLWATUBLh7y3Ma51WjaoSu2DnXX5u0gcTZm8WwyVMmoYiN5A"
+        alt="Logo"
+        class="route-logo"
+      />
+      <p>Click on the map or enter coordinates to set source and destination</p>
+    </header>
+    <div id="app">
+      <div class="container">
+        <div class="input-group">
+          <input
+            type="text"
+            id="src-place"
+            placeholder="Source Locality (e.g. MG Road, Bangalore)"
+          />
+          <input
+            type="text"
+            id="dest-place"
+            placeholder="Destination Locality (e.g. Indiranagar)"
+          />
+        </div>
+
+        <div class="action-buttons">
+          <button id="search-places">Search Places</button>
+        </div>
+
+        <h3>📍 Source Location</h3>
+        <div class="input-group">
+          <input
+            type="number"
+            id="src-lat"
+            placeholder="Source Latitude"
+            step="any"
+          />
+          <input
+            type="number"
+            id="src-lng"
+            placeholder="Source Longitude"
+            step="any"
+          />
+        </div>
+
+        <h3>🎯 Destination Location</h3>
+        <div class="input-group">
+          <input
+            type="number"
+            id="dest-lat"
+            placeholder="Destination Latitude"
+            step="any"
+          />
+          <input
+            type="number"
+            id="dest-lng"
+            placeholder="Destination Longitude"
+            step="any"
+          />
+        </div>
+
+        <div class="action-buttons">
+          <button id="set-coords">Set Route</button>
+          <button id="clear">Clear</button>
+        </div>
+
+        <div class="info">
+          🖱 Click on the map to set a point. Press <strong>S</strong> to select
+          source, <strong>D</strong> for destination,<strong>F</strong> To show
+          route, <strong>T</strong> for live location, <strong>X</strong> to
+          stop live location tracking, <strong>C</strong> to clear route.
+        </div>
+
+        <div id="ride-summary">
+          <h3>📝 Ride Summary</h3>
+          <p><strong>Source:</strong> <span id="summary-src">-</span></p>
+          <p><strong>Destination:</strong> <span id="summary-dest">-</span></p>
+          <p>
+            <strong>Distance:</strong> <span id="summary-distance">-</span> km
+          </p>
+          <p><strong>Fare:</strong> ₹<span id="summary-fare">-</span></p>
+        </div>
+
+        <button id="book-ride-btn">Book Ride</button>
+        <div id="lottie-container"></div>
+      </div>
+
+      <div id="map"></div>
+      <button id="back-to-passenger-btn" class="back-button">
+        Back to Passenger Panel
+      </button>
     </div>
-    
-    <h3>📍 Source Location</h3>
-    <div class="input-group">
-      <input type="number" id="src-lat" placeholder="Source Latitude" step="any" />
-      <input type="number" id="src-lng" placeholder="Source Longitude" step="any" />
-    </div>
-
-    <h3>🎯 Destination Location</h3>
-    <div class="input-group">
-      <input type="number" id="dest-lat" placeholder="Destination Latitude" step="any" />
-      <input type="number" id="dest-lng" placeholder="Destination Longitude" step="any" />
-    </div>
-
-    <div class="buttons">
-      <button id="set-coords">Set Route</button>
-      <button id="clear">Clear</button>
-    </div>
-
-    <div class="info">
-      🖱 Click on the map to set a point. Press <strong>S</strong> to select source, <strong>D</strong> for destination,<strong>F</strong> To show route, <strong>T</strong> for live location, <strong>X</strong> to stop live location tracking, <strong>C</strong> to clear route.
-    </div>
-
-    <div id="map"></div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-
+    <script src="app.js"></script>
+  </body>
 </html>
-
-
-<!-- https://media-hosting.imagekit.io/ec5c2d35d1e640e8/logo.png?Expires=1839018053&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=F1mDXmZbHD8NrL00tDuenHN5FwVEqW~OF1Thlz6FdtxIjqYB10RA~-hYEIhSz2Z9NVDiMwUogJ0-PAKINZTAaw~zHR1CYA~qOkHCBCLCTKPn3f6GOEwoZhuj8yaj3-tJzK~OjjcTMx04xDFBDruEVU-8nxc6x9QXxWZw0M8HDAw6nN0E5vG8lc1qA88vao4TgAjDgIozXkWn82yXZ01sWuq4Zy9ZVcGPHSpOTQCqnaGTqsyd2Amf5IXY6DU-J~ub5P4Vw5L0ilhpgSI2U-emgii~Tbv4QTpyslfPxpmLWATUBLh7y3Ma51WjaoSu2DnXX5u0gcTZm8WwyVMmoYiN5A__ -->
-
-
-
-<!-- good. Now can u find a way where source and destination can be marked using the locality name -->
